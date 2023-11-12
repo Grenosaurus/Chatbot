@@ -1,0 +1,10 @@
+chainlit
+langchain
+torch
+pypdf
+faiss-cpu
+accelerate
+transformers
+sentence_transformers
+pydantic
+time

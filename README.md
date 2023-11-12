@@ -117,6 +117,10 @@ Following Python libraries:
 - accelerate
 - pydantic
 - chainlit
+- sentence_transformers
+- transformers
+- ctransformers
+- chardet
 
 can be installed with the simple command of $pip$, but for the rest Python libraries will need conda installation in the cease the user's OS is Windows. For example, PyTorch with the latest Compute Unified Device Architecture (CUDA) version is available at https://pytorch.org/:
 

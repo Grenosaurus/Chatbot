@@ -104,7 +104,7 @@ Depending on the operating system (OS) the requirements might be slightly differ
 \requirements\pythonRequirements.txt
 ```
 
-Some of the dependency tools can be installed with the help of MS Visual Studio installer (https://visualstudio.microsoft.com/) or it's also possible to bypass those by using conda3. This project is done with a bootstrap version of Anaconda, Miniconda3 (https://docs.conda.io/projects/miniconda/en/latest/) that includes the following necessary packages for this project when downloaded:
+Some of the dependency tools can be installed with the help of MS Visual Studio installer (https://visualstudio.microsoft.com/) or it's also possible to install the packages using conda3 as it will install all the necessary dependencies with the required package. This project is done with a bootstrap version of Anaconda, Miniconda3 (https://docs.conda.io/projects/miniconda/en/latest/) that includes the following necessary packages for this project when downloaded:
 
 - conda3
 - Python 3.11 (the latest version at the time of starting the project)
@@ -122,7 +122,7 @@ Following Python libraries:
 - ctransformers
 - chardet
 
-can be installed with the simple command of $pip$, but for the rest Python libraries will need conda installation in the cease the user's OS is Windows. For example, PyTorch with the latest Compute Unified Device Architecture (CUDA) version is available at https://pytorch.org/:
+can be installed with the simple command of $pip$, but for the rest Python libraries will need conda installation in the cease the user's OS is Windows (works also in Linux). For example, PyTorch with the latest Compute Unified Device Architecture (CUDA) version is available at https://pytorch.org/:
 
 ```
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia

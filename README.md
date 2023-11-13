@@ -149,7 +149,7 @@ The quantized LLaMA 2 7B model used in the project can be downloaded from Tom Jo
 The downloaded model needs to be defined in the global constant:
 
 ```Python
-PRE_TRAINED_LLM_MODEL = '../llm_model/[LLM_MODEL]'
+PRE_TRAINED_LLM_MODEL = '..\[LLM_MODEL]'
 ```
 
 ## Execution
@@ -163,10 +163,10 @@ python llamaTraining.py
 This will create a directory as mentioned above in the requirements, where the embedded data will be saved and stored. The only caution is that the used document needs to be stored in the following directory:
 
 ```
-data_files\[FILE_NAME]
+\data_files\[FILE_NAME]
 ```
 
-and the format is correct.
+and the format is correct. If the above path is used then the folder must be created in the working directory.
 
 Chatbot is executed by using open-sourced Chainlit with the following command:
 
@@ -180,7 +180,7 @@ This will create the interface and will execute the interaction between the user
 llm_model\[LLM_MODEL]
 ```
 
-and the embedded data should be available first for this program to execute the chatbot and work correctly.
+and the embedded data should be available first for this program to execute the chatbot and work correctly. If the above path is used then the folder must be created in the working directory.
 
 
 ## Disclaimer

@@ -135,9 +135,6 @@ The quantized LLaMA 2 13B model used in this project can be downloaded from Tom 
 - Quantized LLaMA 2 13B ~ 9.3 GB (https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF)
 
 
-### LLM Quantization
-
-
 ## Execution
 
 Converting the PDF document to vectorized data with an embedding model from HF by executing the first Python program with the following command:

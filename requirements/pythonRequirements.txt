@@ -8,6 +8,3 @@ transformers
 sentence_transformers
 pydantic
 time
-chardet
-cchardet
-ctransformers

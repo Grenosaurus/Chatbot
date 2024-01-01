@@ -2,17 +2,17 @@
 
 ## Introduction
 
-The purpose of the project is to build a personalized chatbot for assisting users with outputs for queries for provided PDF files that are pre-processed and fine-tuned to the pre-trained Large Language model (LLM).
+The purpose of the project is to build a personalized chatbot for assisting user with technical queries related to the public 3GPP standarized specification of NG-RAN archiitecture (38.xxx).
 
 ### LLaMA 2
 
-In this project, we use Quantized LLaMA 2 as the pre-trained LLM (more in the package installation section) that is in GPT-Generated Model Language (GGML) format in order to for systems central processing units (CPU) and graphics processing units (GPU) inference when using $llama.cpp$. The original model is developed and published by META (https://ai.meta.com/llama/) as a 2nd generation open-source model for scientific and commercial use.
+In this project, we use Quantized LLaMA 2 as the pre-trained LLM (see 'Installation of Python Packages & Pre-Trained LLM' section) that is in GPT-Generated Unified Format (GGUF) format in order to for systems central processing units (CPU) and graphics processing units (GPU) inference when using $llama.cpp$. The original model is developed and published by META (https://ai.meta.com/llama/) as a 2nd generation open-source model for scientific and commercial use.
 
-LLaMA 2 uses a Root Mean Square (RMS) layer normalization transformer block instead of layer normalization for improving training stability and generalization:
+Additionally being an open source LLaMA 2 uses a Root Mean Square (RMS) layer normalization transformer block instead of layer normalization for improving training stability and generalization:
 
 <center>
 
-![LLaMA 2 Architecture](images/LLaMA2.png)
+![LLaMA 2 Architecture](images/Drawio/LLaMA2.drawio.png)
 
 </center>
 
@@ -25,7 +25,7 @@ Below is the flowchart we have the higher-level architectural view of the two Py
 
 <center>
 
-![Chatbot Architecture](images/llama2_DraftDesign.png)
+![Chatbot Architecture](images/Drawio/llama2_DraftDesign.drawio.png)
 
 </center>
 
@@ -68,19 +68,17 @@ To simplify the situation here is a block view of the above presentation of prep
 
 </center>
 
-SentenceTransformers is used for creating a vector of the document's split text by using text embedding (deep learning method). The model used in this project can be found in HuggingFace (https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) and requires PyTorch for use.
-
-Vectored text is then saved and stored in the local system with the help of FAISS as the library can search in a set of vectors of any size (without limitation). Saved data can be found in the following directory:
+SentenceTransformers is used for creating a vector of the document's split text by using text embedding (deep learning method). The model used in this project can be installed from the HuggingFace (https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) and it requires PyTorch. Vectored text is then saved and stored in the local system with the help of FAISS as the library can search in a set of vectors of any size (without limitation). Saved data can be found in the following directory:
 
 ```
 \vectorstores\db_faiss
 ```
 
-which the training model will create in the first execution (execution of the program in the Execution section).
+which the training model will create in the first execution (execution of the program in the Execution section). Re-execution does not 'rm' the existing folder instead overite it with the new vectorized data.
 
 ### Requirements for Chatbot & UI
 
-The user interface (UI) is created with the Chainlit module which is specified for building an interaction interface for Chat GPT-like applications (https://docs.chainlit.io/get-started/overview). In the interface user prompt is created and passed into chain type functionality of Question-Answering (QA) retrieval object provided by Langchain with the used LLM and stored embedded data:
+The user interface (UI) is created with the Streamlit module which is specified for building an interaction interface for Chat GPT-like applications (https://streamlit.io/) similar to Chainlit (https://chainlit.io/). Primary module used for processing the documents and for UI and LLM interaction we use LangChain (https://www.langchain.com/). In the UI we create the user prompt from the query and pass it into the chain type functionality of Question-Answering (QA) retrieval object provided by Langchain with the quantized LLaMA 2 and stored embedded data:
 
 <center>
 
@@ -88,41 +86,40 @@ The user interface (UI) is created with the Chainlit module which is specified f
 
 </center>
 
-LLM responds to the user's prompt (with the source if there is any source) if the information is found in the provided PDF document:
+Model provides the response depending on the provided context (vectoriced database) and it includes the source text and page as string to the interface:
 
 ```Python
-finalContent = f"Sources: " + str(sources) if sources else f"No sources found for the answer!"
+sl.write(result.get('result', 'No answer found'))
+source_documents = result.get('source_documents', [])
+if source_documents:
+    sl.write(source_documents)
 ```
 
-and if not then it will let the user know that it doesn't know the answer. Architecturally observing
+If the chatbot does not know how to interact with the user query, then it will provide the response of not knowing the awnser and that the query is not within the scope of provided context.
 
 ## Installation of Python Packages & Pre-Trained LLM
 
-Depending on the operating system (OS) the requirements might be slightly different. Most of the Python libraries listed in the following text files are not easily and simply downloaded to the Windows OS without additional tool dependencies like C/C++ supported tools:
+Depending on the operating system (OS) the requirements might be slightly different. Most of the Python libraries listed in the pythonRequirements text files are not easily and simply downloaded to the Windows OS without additional tool dependencies like C/C++ supported tools:
 
 ```
 \requirements\pythonRequirements.txt
 ```
 
-Some of the dependency tools can be installed with the help of MS Visual Studio installer (https://visualstudio.microsoft.com/) or it's also possible to install the packages using conda3 as it will install all the necessary dependencies with the required package. This project is done with a bootstrap version of Anaconda, Miniconda3 (https://docs.conda.io/projects/miniconda/en/latest/) that includes the following necessary packages for this project when downloaded:
+Some of the C++/C dependency tools can be installed with the help of MS Visual Studio installer (https://visualstudio.microsoft.com/) or it's also possible to bypass those by using Anaconda. This project is done with a bootstrap version of Anaconda, Miniconda3 (https://docs.conda.io/projects/miniconda/en/latest/) that includes the some necessary python packages for scientifical/mathematical promgramming. Conda includes the following packages:
 
 - conda3
-- Python 3.11 (the latest version at the time of starting the project)
-- pip 23.3 (latest version by the time of starting the project)
-- Some default scientific Python libraries, like Numpy
+- Python 3.11 (the latest version at the time of starting the project).
+- pip 23.3 (latest version by the time of starting the project).
+- Some default scientific Python libraries, like Numpy.
 
-Following Python libraries:
+Following python packages from the text file:
 
 - pypdf
 - accelerate
 - pydantic
-- chainlit
-- sentence_transformers
-- transformers
-- ctransformers
-- chardet
+- streamlit
 
-can be installed with the simple command of $pip$, but for the rest Python libraries will need conda installation in the cease the user's OS is Windows (works also in Linux). For example, PyTorch with the latest Compute Unified Device Architecture (CUDA) version is available at https://pytorch.org/:
+can be installed with the Python's package installer, pip, but for the rest libraries will need Anaconda installation. For example, PyTorch with the latest Compute Unified Device Architecture (CUDA) version is available at https://pytorch.org/ (WARNING: Does nothing if HW does not have NVIDIA GPU):
 
 ```
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
@@ -134,53 +131,41 @@ and for the rest:
 conda install [PACKAGE_NAME] -c conda-forge
 ```
 
-In the case of Linux (tested in Ubuntu) OS, all the requirements can be downloaded with the following command:
+The quantized LLaMA 2 13B model used in this project can be downloaded from Tom Jobbins HuggingFace (HF) page (https://huggingface.co/TheBloke) and will require additional random access memory (RAM) of 12 Gigabytes (GB):
+- Quantized LLaMA 2 13B ~ 9.3 GB (https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF)
 
-```
-pip install -r \requirements\pythonRequirements.txt
-```
 
-The quantized LLaMA 2 7B model used in the project can be downloaded from Tom Jobbins HuggingFace page (https://huggingface.co/TheBloke) and will require additional disk space around of 7 Gigabytes (GB). There are higher parameter range models (13B and 70B) including the 7B model available also in Tom's page if interested in using them:
+### LLM Quantization
 
-- Quantized LLaMA 2 7B ~ 8 GB (https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGML)
-- Quantized LLaMA 2 13B ~ 14 GB (https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML)
-- Quantized LLaMA 2 70B ~ 50 GB (https://huggingface.co/TheBloke/Llama-2-70B-Chat-GGML)
-
-The downloaded model needs to be defined in the global constant:
-
-```Python
-PRE_TRAINED_LLM_MODEL = '..\[LLM_MODEL]'
-```
 
 ## Execution
 
-Converting the data document which will be later used for Fine-Tuning the LLM model, can be executed with the following command:
+Converting the PDF document to vectorized data with embedding model from HF by executing the first Python program with the following command:
 
 ```
-python llamaTraining.py
+python llmDatasetTraining.py
 ```
 
 This will create a directory as mentioned above in the requirements, where the embedded data will be saved and stored. The only caution is that the used document needs to be stored in the following directory:
 
 ```
-\data_files\[FILE_NAME]
+data_files\[FILE_NAME]
 ```
 
-and the format is correct. If the above path is used then the folder must be created in the working directory.
-
-Chatbot is executed by using open-sourced Chainlit with the following command:
+and the format should be PDF files (this can be changed for other formats is wanted). Chatbot is executed by using open-sourced Streamlit with the following command:
 
 ```
-chainlit run chatbotModel.py -w
+streamlit run app.py
 ```
 
-This will create the interface and will execute the interaction between the user's prompt, embedded document, and LLM. Used models need to be downloaded and stored in the following directory when executing the program:
+This will create the interface and will execute the interaction between the user's prompt, embedded document, and LLM. Following constant values in the configuration file downloads the Quantized LLM from Tom Jobbins HF page, as we use LangChain's CTransformer that is designed for Quantized LLM. Define the model's page and the model:
 
-```
-llm_model\[LLM_MODEL]
-```
+---Python
+PRE_TRAINED_LLM_MODEL = 'TheBloke/[MODEL]'
+MODEL_FILE = '[MODEL_FILE]'
+---
 
-and the embedded data should be available first for this program to execute the chatbot and work correctly. If the above path is used then the folder must be created in the working directory.
+and the embedded data should be available first for this program to execute the chatbot and work correctly.
 
 
 ## Disclaimer

@@ -22,7 +22,8 @@ def display_results(result):
 
     source_documents = result.get('source_documents', [])
     if source_documents:
-        sl.write(f'{ConfigUI.HISTORY_ICON} ', source_documents)
+        expander = sl.expander(f'{ConfigUI.HISTORY_ICON}\n', expanded = False)
+        expander.write(source_documents)
 
 
 def collect_user_feedback():
